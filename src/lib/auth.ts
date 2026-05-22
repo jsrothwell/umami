@@ -1,9 +1,11 @@
+import crypto from 'node:crypto';
 import debug from 'debug';
 import { ROLE_PERMISSIONS, ROLES, SHARE_CONTEXT_HEADER, SHARE_TOKEN_HEADER } from '@/lib/constants';
 import { createAuthKey, secret } from '@/lib/crypto';
 import { createSecureToken, parseSecureToken, parseToken } from '@/lib/jwt';
 import redis from '@/lib/redis';
 import { ensureArray } from '@/lib/utils';
+import { getApiKeyByHash } from '@/queries/prisma/apiKey';
 import { getUser } from '@/queries/prisma/user';
 
 const log = debug('umami:auth');
@@ -16,23 +18,33 @@ export function getBearerToken(request: Request) {
 
 export async function checkAuth(request: Request) {
   const token = getBearerToken(request);
-  const payload = parseSecureToken(token, secret());
   const shareToken = await parseShareToken(request);
 
   let user = null;
-  const { userId, authKey } = payload || {};
 
-  if (userId) {
-    user = await getUser(userId);
-  } else if (redis.enabled && authKey) {
-    const key = await redis.client.get(authKey);
+  if (token?.startsWith('umami_')) {
+    const keyHash = crypto.createHash('sha256').update(token).digest('hex');
+    const apiKey = await getApiKeyByHash(keyHash);
 
-    if (key?.userId) {
-      user = await getUser(key.userId);
+    if (apiKey?.userId) {
+      user = await getUser(apiKey.userId);
+    }
+  } else {
+    const payload = parseSecureToken(token, secret());
+    const { userId, authKey } = payload || {};
+
+    if (userId) {
+      user = await getUser(userId);
+    } else if (redis.enabled && authKey) {
+      const key = await redis.client.get(authKey);
+
+      if (key?.userId) {
+        user = await getUser(key.userId);
+      }
     }
   }
 
-  log({ token, payload, authKey, shareToken, user });
+  log({ token, shareToken, user });
 
   if (!user?.id && !shareToken) {
     log('User not authorized');
@@ -53,7 +65,6 @@ export async function checkAuth(request: Request) {
 
   return {
     token,
-    authKey,
     shareToken,
     user,
   };

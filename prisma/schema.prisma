@@ -27,6 +27,7 @@ model User {
   teams     TeamUser[]
   reports   Report[]
   boards    Board[]    @relation("user")
+  apiKeys   ApiKey[]
 
   @@map("user")
 }
@@ -345,6 +346,22 @@ model Board {
   @@index([createdAt])
   @@map("board")
 }
+model ApiKey {
+  id        String    @id() @map("api_key_id") @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  name      String    @db.VarChar(100)
+  keyHash   String    @unique @map("key_hash") @db.VarChar(64)
+  keyPrefix String    @map("key_prefix") @db.VarChar(20)
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  revokedAt DateTime? @map("revoked_at") @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([keyHash])
+  @@map("api_key")
+}
+
 model Share {
   id         String    @id() @map("share_id") @db.Uuid
   entityId   String    @map("entity_id") @db.Uuid
