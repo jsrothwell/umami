@@ -41,9 +41,8 @@ RUN set -x \
     && apk add --no-cache curl \
     && npm install -g pnpm
 
-# Script dependencies — write .npmrc so pnpm allows Prisma postinstall scripts
-RUN printf 'allow-build[]=@prisma/engines\nallow-build[]=prisma\n' > .npmrc \
-    && pnpm add npm-run-all dotenv chalk semver \
+# Script dependencies — use npm so postinstall scripts (prisma generate) run without approval gates
+RUN npm install --no-audit --no-fund npm-run-all dotenv chalk semver \
     prisma@${PRISMA_VERSION} \
     @prisma/client@${PRISMA_VERSION} \
     @prisma/adapter-pg@${PRISMA_VERSION}
