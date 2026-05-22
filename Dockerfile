@@ -41,8 +41,8 @@ RUN set -x \
     && apk add --no-cache curl \
     && npm install -g pnpm@9
 
-# Script dependencies — use npm so postinstall scripts (prisma generate) run without approval gates
-RUN npm install --no-audit --no-fund npm-run-all dotenv chalk semver \
+# Script dependencies — pnpm v9 allows all build scripts by default (no onlyBuiltDependencies set)
+RUN pnpm add npm-run-all dotenv chalk semver \
     prisma@${PRISMA_VERSION} \
     @prisma/client@${PRISMA_VERSION} \
     @prisma/adapter-pg@${PRISMA_VERSION}
