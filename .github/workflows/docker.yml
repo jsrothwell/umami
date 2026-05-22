@@ -1,4 +1,4 @@
-name: Build and Push Custom Umami
+name: Force Custom Umami Build
 
 on:
   push:
@@ -6,7 +6,6 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   build:
@@ -26,10 +25,15 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Docker image
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push safe image
         uses: docker/build-push-action@v5
         with:
           context: .
           file: ./Dockerfile
           push: true
           tags: ghcr.io/jsrothwell/umami:master
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
