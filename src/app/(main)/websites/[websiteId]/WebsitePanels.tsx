@@ -22,36 +22,46 @@ export function WebsitePanels({ websiteId }: { websiteId: string }) {
     <Grid gap="3">
       <GridRow layout="two" {...rowProps}>
         <Panel>
-          <Heading size="2xl">{t(labels.pages)}</Heading>
+          <Heading size="2xl">{t(labels.screens)}</Heading>
           <Tabs>
             <TabList>
-              <Tab id="path">{t(labels.path)}</Tab>
+              <Tab id="path">{t(labels.screen)}</Tab>
               <Tab id="entry">{t(labels.entry)}</Tab>
               <Tab id="exit">{t(labels.exit)}</Tab>
             </TabList>
             <TabPanel id="path">
-              <MetricsTable type="path" title={t(labels.path)} {...tableProps} />
+              <MetricsTable type="path" title={t(labels.screen)} {...tableProps} />
             </TabPanel>
             <TabPanel id="entry">
-              <MetricsTable type="entry" title={t(labels.path)} {...tableProps} />
+              <MetricsTable type="entry" title={t(labels.screen)} {...tableProps} />
             </TabPanel>
             <TabPanel id="exit">
-              <MetricsTable type="exit" title={t(labels.path)} {...tableProps} />
+              <MetricsTable type="exit" title={t(labels.screen)} {...tableProps} />
             </TabPanel>
           </Tabs>
         </Panel>
         <Panel>
-          <Heading size="2xl">{t(labels.sources)}</Heading>
+          <Heading size="2xl">{t(labels.events)}</Heading>
           <Tabs>
             <TabList>
-              <Tab id="referrer">{t(labels.referrers)}</Tab>
-              <Tab id="channel">{t(labels.channels)}</Tab>
+              <Tab id="event">{t(labels.event)}</Tab>
+              <Tab id="tag">{t(labels.tag)}</Tab>
             </TabList>
-            <TabPanel id="referrer">
-              <MetricsTable type="referrer" title={t(labels.referrer)} {...tableProps} />
+            <TabPanel id="event">
+              <MetricsTable
+                type="event"
+                title={t(labels.event)}
+                {...tableProps}
+                metric={t(labels.count)}
+              />
             </TabPanel>
-            <TabPanel id="channel">
-              <MetricsTable type="channel" title={t(labels.channel)} {...tableProps} />
+            <TabPanel id="tag">
+              <MetricsTable
+                type="tag"
+                title={t(labels.tag)}
+                {...tableProps}
+                metric={t(labels.count)}
+              />
             </TabPanel>
           </Tabs>
         </Panel>
@@ -62,18 +72,18 @@ export function WebsitePanels({ websiteId }: { websiteId: string }) {
           <Heading size="2xl">{t(labels.environment)}</Heading>
           <Tabs>
             <TabList>
-              <Tab id="browser">{t(labels.browsers)}</Tab>
-              <Tab id="os">{t(labels.os)}</Tab>
               <Tab id="device">{t(labels.devices)}</Tab>
+              <Tab id="os">{t(labels.os)}</Tab>
+              <Tab id="browser">{t(labels.browsers)}</Tab>
             </TabList>
-            <TabPanel id="browser">
-              <MetricsTable type="browser" title={t(labels.browser)} {...tableProps} />
+            <TabPanel id="device">
+              <MetricsTable type="device" title={t(labels.device)} {...tableProps} />
             </TabPanel>
             <TabPanel id="os">
               <MetricsTable type="os" title={t(labels.os)} {...tableProps} />
             </TabPanel>
-            <TabPanel id="device">
-              <MetricsTable type="device" title={t(labels.device)} {...tableProps} />
+            <TabPanel id="browser">
+              <MetricsTable type="browser" title={t(labels.browser)} {...tableProps} />
             </TabPanel>
           </Tabs>
         </Panel>

@@ -20,7 +20,7 @@ export function WebsiteMetricsBar({
     compare: compareMode ? dateCompare?.compare : undefined,
   });
 
-  const { pageviews, visitors, visits, bounces, totaltime, comparison } = data || {};
+  const { pageviews, visitors, visits, totaltime, comparison } = data || {};
 
   const metrics = data
     ? [
@@ -38,19 +38,9 @@ export function WebsiteMetricsBar({
         },
         {
           value: pageviews,
-          label: t(labels.views),
+          label: t(labels.events),
           change: pageviews - comparison.pageviews,
           formatValue: formatLongNumber,
-        },
-        {
-          label: t(labels.bounceRate),
-          value: (Math.min(visits, bounces) / visits) * 100,
-          prev: (Math.min(comparison.visits, comparison.bounces) / comparison.visits) * 100,
-          change:
-            (Math.min(visits, bounces) / visits) * 100 -
-            (Math.min(comparison.visits, comparison.bounces) / comparison.visits) * 100,
-          formatValue: n => `${Math.round(+n)}%`,
-          reverseColors: true,
         },
         {
           label: t(labels.visitDuration),

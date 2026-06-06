@@ -1,7 +1,8 @@
 'use client';
-import { Column, Grid, ListItem, SearchField, Select } from '@umami/react-zen';
+import { Column, Grid, ListItem, SearchField, Select, Text } from '@umami/react-zen';
 import { useState } from 'react';
 import { WebsiteControls } from '@/app/(main)/websites/[websiteId]/WebsiteControls';
+import { Panel } from '@/components/common/Panel';
 import { useDateRange, useMessages } from '@/components/hooks';
 import { Attribution } from './Attribution';
 
@@ -17,6 +18,12 @@ export function AttributionPage({ websiteId }: { websiteId: string }) {
   return (
     <Column gap="6">
       <WebsiteControls websiteId={websiteId} />
+      <Panel>
+        <Text color="muted" size="sm">
+          Attribution report tracks how users arrive via UTM parameters and click IDs in URLs. For
+          mobile apps, pass campaign data as custom event properties instead.
+        </Text>
+      </Panel>
       <Grid columns={{ base: '1fr', md: '1fr 1fr 1fr' }} gap>
         <Column>
           <Select label={t(labels.model)} value={model} defaultValue={model} onChange={setModel}>
@@ -27,6 +34,7 @@ export function AttributionPage({ websiteId }: { websiteId: string }) {
         <Column>
           <Select label={t(labels.type)} value={type} defaultValue={type} onChange={setType}>
             <ListItem id="path">{t(labels.viewedPage)}</ListItem>
+
             <ListItem id="event">{t(labels.triggeredEvent)}</ListItem>
           </Select>
         </Column>
